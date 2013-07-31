@@ -1,4 +1,4 @@
-<?php
+<?php namespace Eskapism\JQUpload;
 /*
  * jQuery File Upload Plugin PHP Class 5.9.2
  * https://github.com/blueimp/jQuery-File-Upload
