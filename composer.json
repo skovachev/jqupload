@@ -1,0 +1,22 @@
+{
+    "name": "skovachev/jqupload",
+    "description": "A composer package for jQuery File Upload",
+    "keywords": ["jquery", "file upload"],
+    "license": "DBAD",
+    "authors": [
+        {
+            "name": "Stefan Kovachev",
+            "email": "contact@eskapism.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Eskapism\\JQUpload": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}

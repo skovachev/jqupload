@@ -1,4 +1,1 @@
-jqupload
-========
-
-A composer package for jQuery File Upload 
+This packages is based on https://github.com/boparaiamrit/laravel-jqueryfileupload
