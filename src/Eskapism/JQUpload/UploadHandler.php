@@ -269,7 +269,7 @@ class UploadHandler
         $file->type = $type;
         $error = $this->has_error($uploaded_file, $file, $error);
 
-        $ok = Event::first('upload.handle_file_upload_start', func_get_args());
+        $ok = \Event::fire('upload.handle_file_upload_start', func_get_args());
         if (!is_null($ok) and $ok !== true)
         {
             $error = $ok;
@@ -329,7 +329,7 @@ class UploadHandler
         // SK
         if (!isset($file->error))
         {
-            $ok = Event::first('upload.handle_file_upload_done', array($file));
+            $ok = \Event::fire('upload.handle_file_upload_done', array($file));
             if (!is_null($ok) and $ok !== true)
             {
                 // delete file
@@ -350,7 +350,7 @@ class UploadHandler
         } 
         else
         {
-            Event::first('upload.handle_file_upload_error', array($file));
+            \Event::fire('upload.handle_file_upload_error', array($file));
         }
 
         return $file;
