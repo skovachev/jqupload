@@ -270,6 +270,8 @@ class UploadHandler
         $error = $this->has_error($uploaded_file, $file, $error);
 
         $ok = \Event::fire('upload.handle_file_upload_start', func_get_args());
+        $ok = is_array($ok) && count($ok) > 0 ? $ok[0] : $ok;
+
         if (!is_null($ok) and $ok !== true)
         {
             $error = $ok;
@@ -330,6 +332,8 @@ class UploadHandler
         if (!isset($file->error))
         {
             $ok = \Event::fire('upload.handle_file_upload_done', array($file));
+            $ok = is_array($ok) && count($ok) > 0 ? $ok[0] : $ok;
+            
             if (!is_null($ok) and $ok !== true)
             {
                 // delete file
