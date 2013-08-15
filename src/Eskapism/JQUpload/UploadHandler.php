@@ -263,13 +263,18 @@ class UploadHandler
     
     protected function handle_file_upload($uploaded_file, $name, $size, $type, $error) {
 
+        $name = str_replace('?', '', utf8_decode($name)); //remove right to left marker from unicode txt
+        $name = str_replace('%E2%80%8F', '', $name);
+
+        $func_args = array_values(compact(array('uploaded_file', 'name', 'size', 'type', 'error')));
+
         $file = new \stdClass();
         $file->name = $this->trim_file_name($name, $type);
         $file->size = intval($size);
         $file->type = $type;
         $error = $this->has_error($uploaded_file, $file, $error);
 
-        $ok = \Event::fire('upload.handle_file_upload_start', func_get_args());
+        $ok = \Event::fire('upload.handle_file_upload_start', $func_args);
         $ok = is_array($ok) && count($ok) > 0 ? $ok[0] : $ok;
 
         if (!is_null($ok) and $ok !== true)
@@ -333,7 +338,7 @@ class UploadHandler
         {
             $ok = \Event::fire('upload.handle_file_upload_done', array($file));
             $ok = is_array($ok) && count($ok) > 0 ? $ok[0] : $ok;
-            
+
             if (!is_null($ok) and $ok !== true)
             {
                 // delete file
@@ -354,7 +359,9 @@ class UploadHandler
         } 
         else
         {
-            \Event::fire('upload.handle_file_upload_error', array($file));
+            $response = \Event::fire('upload.handle_file_upload_error', array($file));
+            $response = is_array($response) && count($response) > 0 ? $response[0] : $response;
+            $file->error = $response;
         }
 
         return $file;
