@@ -344,7 +344,7 @@ class UploadHandler
                 // delete file
                 $file_name = $file->name;
                 $file_path = $this->options['upload_dir'].$file_name;
-                $success = is_file($file_path) && $file_name[0] !== '.' && unlink($file_path);
+                $success = is_file($file_path) && $file_name[0] !== '.' && file_exists($file_path) && unlink($file_path);
                 if ($success) {
                     foreach($this->options['image_versions'] as $version => $options) {
                         $file_obj = $options['upload_dir'].$file_name;
