@@ -10,9 +10,27 @@
  * http://www.opensource.org/licenses/MIT
  */
 
+use Event;
+
 class UploadHandler
 {
     protected $options;
+    protected $context = null;
+
+    public function setContext($context)
+    {
+        $this->context = $context;
+    }
+
+    protected function fireEvent($event, $args)
+    {
+        $ok = Event::fire($event, $args);
+        if (!is_null($this->context))
+        {
+            $ok = $ok && Event::fire($this->context . '.' . $event, $args);
+        }
+        return $ok;
+    }
 
     function __construct($option = array()) {
         $this->options = array(
@@ -274,7 +292,7 @@ class UploadHandler
         $file->type = $type;
         $error = $this->has_error($uploaded_file, $file, $error);
 
-        $ok = \Event::fire('upload.handle_file_upload_start', $func_args);
+        $ok = $this->fireEvent('upload.handle_file_upload_start', $func_args);
         $ok = is_array($ok) && count($ok) > 0 ? $ok[0] : $ok;
 
         if (!is_null($ok) and $ok !== true)
@@ -336,7 +354,7 @@ class UploadHandler
         // SK
         if (!isset($file->error))
         {
-            $ok = \Event::fire('upload.handle_file_upload_done', array($file));
+            $ok = $this->fireEvent('upload.handle_file_upload_done', array($file));
             $ok = is_array($ok) && count($ok) > 0 ? $ok[0] : $ok;
 
             if (!is_null($ok) and $ok !== true)
@@ -359,7 +377,7 @@ class UploadHandler
         } 
         else
         {
-            $response = \Event::fire('upload.handle_file_upload_error', array($file));
+            $response = $this->fireEvent('upload.handle_file_upload_error', array($file));
             $response = is_array($response) && count($response) > 0 ? $response[0] : $response;
             $file->error = $response;
         }
