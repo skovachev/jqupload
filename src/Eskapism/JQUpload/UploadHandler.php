@@ -24,10 +24,14 @@ class UploadHandler
 
     protected function fireEvent($event, $args)
     {
-        $ok = Event::fire($event, $args);
+        $ok = null;
         if (!is_null($this->context))
         {
-            $ok = $ok && Event::fire($this->context . '.' . $event, $args);
+            $ok = Event::fire($this->context . '_' . $event, $args);
+        }
+        else
+        {
+            $ok = Event::fire($event, $args);
         }
         return $ok;
     }
